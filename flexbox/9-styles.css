@@ -375,10 +375,10 @@
     flex-wrap: wrap;
 }
 
- /* Section ABOUT US*/
- .section-about-us .[class*='col-'] {
-     align-self: center;
- }
+/* Section ABOUT US */
+.section-about-us [class*='col-'] {
+    align-self: center;
+}
 
 /*** 4. CARD ***/
 /* Existing styles for the CARD section */
