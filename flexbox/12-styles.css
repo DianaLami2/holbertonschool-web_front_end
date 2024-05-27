@@ -565,6 +565,10 @@
   /* Post
     ============================= */
 
+    .post {
+      display: flex;
+    }
+
     .main-article .post {
         display: flex;
     }
