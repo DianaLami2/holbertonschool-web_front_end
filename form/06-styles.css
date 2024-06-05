@@ -152,7 +152,7 @@
     text-decoration: var(--button-hover-text-decoration);
     background: var(--button-hover-background);
     transition-duration: var(--transition-duration);
-    transition-property: color;
+    transition-property: color; background-color: 
   }
 
   .button-primary {
@@ -161,7 +161,7 @@
   }
 
   .button-primary:hover {
-    background: var(--color-primary);
+    color: var(--color-primary);
     background: var(--color-white);
   }
   
