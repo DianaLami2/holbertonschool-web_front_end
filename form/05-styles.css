@@ -735,7 +735,6 @@
       /* Form field
       ============================= */
 
-
       .form-field-container {
         position: relative;
       }
@@ -759,7 +758,16 @@
       }
 
 
-      .form-group:focus-within + .form-help {
+      .form-group:focus .form-help {
         max-height: 20rem;
         margin: .4rem 0 0;
       }
+
+
+
+
+
+
+
+
+
