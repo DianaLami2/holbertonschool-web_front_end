@@ -1,84 +1,101 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js"></script>
-    <title>Task 4</title>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Task 2 - Form Handling</title>
+  <style>
+    input::placeholder {
+      color: grey;
+    }
+
+    #loginForm {
+      display: none;
+    }
+
+    #welcomeMessage {
+      display: none;
+    }
+
+    .logout-link {
+      font-weight: normal;
+      font-style: italic;
+      margin-left: 10px;
+      cursor: pointer;
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/js-cookie@3/dist/js.cookie.min.js"></script>
 </head>
+
 <body>
-    <!-- Create Cookies -->
-    <div id="formContainer">
-        <h2>Login to the website</h2>
-        <!-- <form onsubmit="event.defaultPrevented();"> -->
-            <input type="text" id="firstname" value="Firstname">
-            <input type="text" id="email" value="Email">
-            <button onclick="setCookiesAndShowWelcomeMessage();">Log me in</button>
-        <!-- </form> -->
-    </div>
-    <!-- SHOW Dashboard on login Hide on Logout -->
-    <div class="dashboard">
-        <p style="display: none;" id="welcome">Welcome <span id="cookieName"></span><span id="logout" onclick="deleteCookiesAndShowForm();" style="font-weight: normal; font-style: italic; margin-left: 10px; cursor: pointer; background: yellow;">( Logout )</span></p>
-    </div>
+  <div id="formContainer">
+    <h2>Login to the website</h2>
+    <form id="loginForm">
+      <input type="text" id="firstname" placeholder="First Name">
+      <input type="text" id="email" placeholder="Email">
+      <button type="submit">Log me in</button>
+    </form>
+  </div>
 
-    <script type="text/javascript">
+  <div id="welcomeMessage">
+    <h1 id="welcomeText"></h1>
+  </div>
 
-        function setCookies() {
-            let firstname = document.getElementById("firstname").value;
-            let email = document.getElementById("email").value;
+  <script type="text/javascript">
+    function showForm() {
+      let welcomeMessage = document.getElementById('welcomeMessage');
+      if (welcomeMessage) {
+        welcomeMessage.style.display = 'none';
+      }
+      document.getElementById('loginForm').style.display = 'block';
+    }
 
-            // Set Cookies using js-cookie
-            Cookies.set("firstname", firstname, { expires: 10 });
-            Cookies.set("email", email, { expires: 10 });
-        }
+    function hideForm() {
+      document.getElementById('loginForm').style.display = 'none';
+    }
 
-        function showCookies() {
-            const paragraph = `Email: ${Cookies.get("email")} - Firstname: ${Cookies.get("firstname")}`
-            let p = document.createElement("p").innerHTML = paragraph
-            document.body.append(p);
-        }
+    function deleteCookiesAndShowForm() {
+      Cookies.remove('firstname');
+      Cookies.remove('email');
+      showForm();
+    }
 
-        
+    function setCookiesAndShowWelcomeMessage() {
+      let firstname = document.getElementById('firstname').value;
+      let email = document.getElementById('email').value;
+      Cookies.set('firstname', firstname, { expires: 10 });
+      Cookies.set('email', email, { expires: 10 });
+      showWelcomeMessageOrForm();
+    }
 
-        // SHOW FORM
-        function showForm() {
-            document.getElementById("formContainer").style.display = "block";
-        }
+    function showWelcomeMessageOrForm() {
+      let firstname = Cookies.get('firstname');
+      if (firstname) {
+        let welcomeMessage = document.createElement('h1');
+        welcomeMessage.innerHTML = `Welcome: ${firstname} <span id="logoutLink" class="logout-link">Logout</span>`;
 
-        // HIDE FORM
-        function hideForm() {
-            document.getElementById("formContainer").style.display = "none";
-        }
+        document.body.innerHTML = '';
+        document.body.appendChild(welcomeMessage);
 
-        // LOGOUT USER
-        function deleteCookiesAndShowForm() {
-            // Set expiration date to delete cookie
-            let date = new Date(Date.now() - (10*24*60*60*1000));
-            date = date.toUTCString();
+        document.getElementById('logoutLink').addEventListener('click', function () {
+          deleteCookiesAndShowForm();
+        });
+      } else {
+        showForm();
+      }
+    }
 
-            Cookies.remove("firstname", { path: " " });
-            Cookies.remove("email", { path: " " });
-            document.getElementById("welcome").style.display = "none";
-            showForm();
-        }
+    document.getElementById('loginForm').addEventListener('submit', function (event) {
+      event.preventDefault();
+      setCookiesAndShowWelcomeMessage();
+    });
 
-        // LOGIN USER
-        function showWelcomeMessageOrForm() {
-            if (Cookies.get("firstname") == " "){
-                showForm()
-            }
-            else{
-                hideForm()
-            }
-            document.getElementById("cookieName").innerHTML = Cookies.get("firstname");
-            document.getElementById("welcome").style.display = "block";
-        }
-
-        function setCookiesAndShowWelcomeMessage() {
-            setCookies();
-            showWelcomeMessageOrForm();
-        }
-    </script>
+    window.onload = function () {
+      showWelcomeMessageOrForm();
+    };
+  </script>
 </body>
+
 </html>

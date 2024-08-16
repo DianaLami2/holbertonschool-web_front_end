@@ -1,42 +1,85 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Task 6</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shopping Cart</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+
+    .item {
+      margin-bottom: 10px;
+    }
+
+    button {
+      margin-left: 10px;
+    }
+
+    #cart {
+      margin-top: 20px;
+    }
+  </style>
 </head>
+
 <body>
-    <script type="text/javascript">
-        let availableItems = [ "Shampoo", "Soap", "Sponge", "Water" ]
+  <h1>Shopping Cart</h1>
+  <div id="store"></div>
+  <div id="cart"></div>
 
-        if (typeof(Storage) === "undefined") {
-            alert("Sorry, your browser does not support Web storage. Try again with a better one");
-        }
+  <script>
+    if (typeof (Storage) === "undefined") {
+      alert("Sorry, your browser does not support Web storage. Try again with a better one.");
+    } else {
+      const availableItems = ['Shampoo', 'Soap', 'Sponge', 'Water'];
+      const cartKey = 'shoppingCart';
 
-        function addItemToCart(item) {
-            sessionStorage.setItem(item, true);
-        }
+      if (!sessionStorage.getItem(cartKey)) {
+        sessionStorage.setItem(cartKey, JSON.stringify({}));
+      }
 
-        function createStore() {
-            let ul = document.createElement("ul");
-            let liItems = "";
-            availableItems.forEach(function(item) {
-                liItems += `<li onclick="addItemToCart('${item}');">${item}</li>`
-            })
-            ul.innerHTML = liItems
-            document.body.append(ul);
-        }
+      function createStore() {
+        const storeDiv = document.getElementById('store');
+        storeDiv.innerHTML = '<h2>Available Items</h2>';
 
-        function displayCart() {
-            let X = sessionStorage.length
-            let p = document.createElement("p");
-            p.innerHTML = `You previously had ${X} items in your cart`;
-            document.body.append(p);
-        }
+        const ul = document.createElement('ul');
+        storeDiv.appendChild(ul);
 
-        createStore();
+        availableItems.forEach(item => {
+          const li = document.createElement('li');
+          li.innerHTML = `
+                        ${item} <button onclick="addItemToCart('${item}')">Add to Cart</button>
+                    `;
+          ul.appendChild(li);
+        });
+      }
+
+      function addItemToCart(item) {
+        const cart = JSON.parse(sessionStorage.getItem(cartKey));
+        cart[item] = true;
+        sessionStorage.setItem(cartKey, JSON.stringify(cart));
         displayCart();
-    </script>
+      }
+
+      function displayCart() {
+        const cart = JSON.parse(sessionStorage.getItem(cartKey));
+        const cartDiv = document.getElementById('cart');
+
+        cartDiv.innerHTML = '';
+
+        const itemCount = Object.keys(cart).length;
+        const message = document.createElement('p');
+        message.textContent = `You previously had ${itemCount} ${itemCount === 1 ? 'item' : 'items'} in your cart.`;
+        cartDiv.appendChild(message);
+      }
+
+      createStore();
+      displayCart();
+    }
+  </script>
 </body>
+
 </html>
